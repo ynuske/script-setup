@@ -76,7 +76,7 @@ else
     echo -e "${NC}" # Reseta a cor
     sudo pacman -S --noconfirm steam-native-runtime lutris mangohud goverlay gamemode wine wine-mono wine-gecko winetricks
     echo -e "${GREEN}"
-    figlet "Instalação Concluída"
+    figlet "Instalacao finalizada"
     echo -e "${NC}" # Reseta a cor
 
 
