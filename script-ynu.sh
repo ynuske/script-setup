@@ -47,12 +47,27 @@ else
     echo -e "${BLUE}" #inicia a cor azul
     figlet "Pacotes Essenciais"
     echo -e "${NC}" # Reseta a cor
-    sudo pacman -S --noconfirm mesa vulkan-radeon lib32-vulkan-radeon lib32-mesa
+    sudo pacman -S --noconfirm mesa vulkan-radeon lib32-vulkan-radeon lib32-mesa go
     sudo pacman -S --noconfirm lib32-alsa-lib lib32-alsa-plugins lib32-libpulse lib32-openal
     sudo pacman -S --noconfirm sdl2 sdl2_image sdl2_mixer sdl2_ttf lib32-sdl2 lib32-sdl2_image lib32-sdl2_mixer lib32-sdl2_ttf
     
     #----------------------------------------------------------------------------
 
+    echo -e "${RED}" # Inicia a cor Vermelha
+    figlet "Instalando Aur Helper (yay)"
+    echo -e "${NC}" # Reseta a cor
+    if ! command -v yay &> /dev/null
+    then
+        echo -e "${YELLOW}Instalando yay...${NC}"
+        git clone https://aur.archlinux.org/yay.git
+        cd yay
+        makepkg -si --noconfirm
+        cd ..
+        rm -rf yay
+        echo -e "${GREEN}yay instalado com sucesso!${NC}"
+    else
+        echo -e "${GREEN}yay já está instalado.${NC}"
+    fi
     echo -e "${BLUE}" #inicia a cor azul
     figlet "Aplicativos"
     echo -e "${NC}" # Reseta a cor
