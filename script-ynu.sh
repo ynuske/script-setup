@@ -72,7 +72,7 @@ else
     figlet "Aplicativos"
     echo -e "${NC}" # Reseta a cor
     echo -e "${YELLOW}" # Inicia a cor Amarela
-    yay pacman -S --noconfirm vesktop visual-studio-code-bin obs-studio zapzap zen-browser telegram-desktop camtrix peaclock cava
+    yay pacman -S --noconfirm vesktop visual-studio-code-bin obs-studio zapzap zen-browser telegram-desktop cmatrix peaclock cava
     echo -e "${NC}" # Reseta a cor
     sudo pacman -S --noconfirm steam-native-runtime lutris mangohud goverlay gamemode wine wine-mono wine-gecko winetricks
     echo -e "${GREEN}"
