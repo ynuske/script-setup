@@ -151,7 +151,7 @@ else
         gimp
         krita
         libreoffice-fresh
-        libreoffice-fresh-pt-br # Adicionado o pacote de idioma em PT-BR
+        libreoffice-fresh-pt-br #Adicionado o pacote de idioma em PT-BR
         file-roller
         p7zip
         unrar
