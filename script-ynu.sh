@@ -103,7 +103,7 @@ else
         steam-native-runtime
         lutris
         mangohud
-        govelay
+        goverlay
         gamemode
         wine
         wine-mono
