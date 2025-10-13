@@ -1,4 +1,4 @@
-1 #!/bin/bash
+#!/bin/bash
 set -e # habilita o "exit" caso ocorra erro
 
 # --- Definição das Cores (Adicione isso no início) ---
@@ -9,6 +9,12 @@ YELLOW='\033[0;33m' # Amarelo
 RED='\033[0;31m'    # Vermelho
 BOLD='\033[1m'  # Negrito
 # ----------------------------------------------------
+
+# Função para verificar se um pacote está instalado
+is_installed() {
+pacman -Q "$1" &> /dev/null
+return $?
+}
 
 echo "                  ██╗███╗   ██╗██╗ ██████╗██╗ ██████╗ "
 echo "                  ██║████╗  ██║██║██╔════╝██║██╔═══██╗"
@@ -53,37 +59,121 @@ else
     
     #----------------------------------------------------------------------------
 
-    echo -e "${RED}" # Inicia a cor Vermelha
-    figlet "Instalando Aur Helper (yay)"
-    echo -e "${NC}" # Reseta a cor
-    if ! command -v yay &> /dev/null
-    then
-        echo -e "${YELLOW}Instalando yay...${NC}"
-        git clone https://aur.archlinux.org/yay.git
-        cd yay
-        makepkg -si --noconfirm
-        cd ..
-        rm -rf yay
-        echo -e "${GREEN}yay instalado com sucesso!${NC}"
-    else
-        echo -e "${GREEN}yay já está instalado.${NC}"
-    fi
-    echo -e "${BLUE}" #inicia a cor azul
+    # -- Pacotes do AUR (Instalados via YAY) --
+
+    echo -e "\n${BOLD}Verificando e instalando aplicativos (AUR)...${NC}"
     figlet "Aplicativos"
-    echo -e "${NC}" # Reseta a cor
-    echo -e "${YELLOW}" # Inicia a cor Amarela
-    yay pacman -S --noconfirm vesktop visual-studio-code-bin obs-studio zapzap zen-browser telegram-desktop cmatrix peaclock cava
-    echo -e "${NC}" # Reseta a cor
-    sudo pacman -S --noconfirm steam-native-runtime lutris mangohud goverlay gamemode wine wine-mono wine-gecko winetricks
+    echo -e "${NC}"
+
+    AUR_PACKAGES=(
+        vesktop
+        visual-studio-code-bin
+        obs-studio
+        zapzap
+        zen-browser
+        telegram-desktop
+        camtrix
+        peaclock
+        cava
+    )
+    AUR_TO_INSTALL=()
+
+    for PKG in "${AUR_PACKAGES[@]}"; do
+        if ! is_installed "$PKG"; then
+            AUR_TO_INSTALL+=("$PKG")
+        else
+            echo -e "${GREEN}  [OK]${NC} ${PKG} já está instalado."
+        fi
+    done
+
+    # Instala apenas o que está faltando
+    if [ ${#AUR_TO_INSTALL[@]} -gt 0 ]; then
+        echo -e "${YELLOW}  [INFO]${NC} Instalando pacotes AUR: ${AUR_TO_INSTALL[*]}..."
+        yay -S --noconfirm "${AUR_TO_INSTALL[@]}"
+    else
+        echo -e "${GREEN}  [SUCESSO]${NC} Todos os pacotes AUR já estavam instalados!"
+    fi
+
+
+    # -- Pacotes Oficiais (Instalados via Pacman) --
+
+    echo -e "\n${BOLD}Verificando e instalando pacotes de jogos (Oficial)...${NC}"
+
+    PACMAN_PACKAGES=(
+        steam-native-runtime
+        lutris
+        mangohud
+        govelay
+        gamemode
+        wine
+        wine-mono
+        wine-gecko
+        winetricks
+    )
+    PACMAN_TO_INSTALL=()
+
+    for PKG in "${PACMAN_PACKAGES[@]}"; do
+        if ! is_installed "$PKG"; then
+            PACMAN_TO_INSTALL+=("$PKG")
+        else
+            echo -e "${GREEN}  [OK]${NC} ${PKG} já está instalado."
+        fi
+    done
+
+    # Instala apenas o que está faltando
+    if [ ${#PACMAN_TO_INSTALL[@]} -gt 0 ]; then
+        echo -e "${YELLOW}  [INFO]${NC} Instalando pacotes Oficiais: ${PACMAN_TO_INSTALL[*]}..."
+        sudo pacman -S --noconfirm "${PACMAN_TO_INSTALL[@]}"
+    else
+        echo -e "${GREEN}  [SUCESSO]${NC} Todos os pacotes Oficiais já estavam instalados!"
+    fi
+
+    # -- Finalização --
     echo -e "${GREEN}"
-    figlet "Instalacao finalizada"
-    echo -e "${NC}" # Reseta a cor
+    figlet "Instalacao Concluida"
+    echo -e "${NC}"
 
+    # =========================================================
+    # CATEGORIA 3: PRODUTIVIDADE E UTILITÁRIOS (Pacman)
+    # =========================================================
 
+    echo -e "\n${BOLD}--- Instalando Utilitários, Produtividade e Mídia ---${NC}"
 
+    # Lista de todos os pacotes ESSENCIAIS (Pacman)
+    UTILITIES_PACKAGES=(
+        flameshot
+        gnome-disk-utility
+        gnome-tweaks
+        htop
+        btop
+        vlc
+        audacity
+        gimp
+        krita
+        libreoffice-fresh
+        libreoffice-fresh-pt-br # Adicionado o pacote de idioma em PT-BR
+        file-roller
+        p7zip
+        unrar
+        unzip
+    )
+    UTILITIES_TO_INSTALL=() # Lista para armazenar apenas os pacotes ausentes
 
+    # Loop de Verificação
+    for PKG in "${UTILITIES_PACKAGES[@]}"; do
+        if ! is_installed "$PKG"; then
+            UTILITIES_TO_INSTALL+=("$PKG")
+        else
+            echo -e "${GREEN}  [OK]${NC} ${PKG} já está instalado."
+        fi
+    done
 
-
-
+    # Instalação
+    if [ ${#UTILITIES_TO_INSTALL[@]} -gt 0 ]; then
+        echo -e "${YELLOW}  [INFO]${NC} Instalando Utilitários: ${UTILITIES_TO_INSTALL[*]}..."
+        sudo pacman -S --noconfirm "${UTILITIES_TO_INSTALL[@]}"
+    else
+        echo -e "${GREEN}${BOLD}  [SUCESSO]${NC} Todos os pacotes de utilitários já estavam instalados."
+    fi
 
 fi
